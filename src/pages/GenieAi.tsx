@@ -305,7 +305,7 @@ setTimeout(() => {
             </div>
 
             {/* Quick Suggestions */}
-            {messages.length < 6 && (
+            {messages.length < 1 && (
               <div className="px-6 py-4 border-t bg-card">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-1">
                   Quick Wishes
