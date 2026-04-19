@@ -10,38 +10,38 @@ import { apiService } from "@/lib/api/api";
 
 
 const StoreLocations = () => {
-  const [storeStatus, setStoreStatus] = useState<{
-    isOpen: boolean;
-    openingTime: string;
-    closingTime: string;
-    holidayMode: boolean;
-    message: string;
-    lastStatusChange: string;
-  } | null>(null);
+  // const [storeStatus, setStoreStatus] = useState<{
+  //   isOpen: boolean;
+  //   openingTime: string;
+  //   closingTime: string;
+  //   holidayMode: boolean;
+  //   message: string;
+  //   lastStatusChange: string;
+  // } | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const res = await apiService.getStoreStatus();
-        if (res.success) {
-          setStoreStatus(res.data);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchStatus = async () => {
+  //     try {
+  //       const res = await apiService.getStoreStatus();
+  //       if (res.success) {
+  //         setStoreStatus(res.data);
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchStatus();
-  }, []);
+  //   fetchStatus();
+  // }, []);
  const stores = [
   {
     name: "Chennai – Guindy",
     address: "Plot No. 1, Jawaharlal Nehru Salai, SIDCO Industrial Estate, Guindy, Chennai, Tamil Nadu 600032",
-    status: storeStatus?.isOpen  ? "open" as const : "Closed",
+    status:  "open" as const ,
     hours: "8:00 AM – 11:00 PM",
     flagship: true,
     mapUrl: "https://maps.app.goo.gl/kaWEJ625iSLgu4K59",
