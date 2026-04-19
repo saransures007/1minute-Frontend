@@ -112,7 +112,10 @@ const HeroSection = () => {
   const status = getStatusDisplay();
 
   return (
-    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[vh] flex items-center overflow-hidden">
+
+        
+
       {/* Background image with overlay */}
       <div className="absolute inset-0">
         <img src={heroStore} alt="" className="w-full h-full object-cover" />
@@ -191,6 +194,17 @@ const HeroSection = () => {
             transition={{ delay: 1, duration: 0.6 }}
             className="space-y-5"
           >
+            
+              <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-display font-bold mb-4">
+               <span className="text-gradient-hero">1 Minute</span> Convenience Store
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Join our growing family across South India
+            </p>
+          </div>
+
+
             <div className="inline-block relative">
               <p className="text-3xl md:text-4xl font-display font-semibold text-foreground tracking-tight">
                 Grab & Go

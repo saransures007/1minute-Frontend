@@ -3,12 +3,45 @@ import { MapPin, Phone, Clock, Navigation, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
+import { useEffect, useState } from "react";
+import { apiService } from "@/lib/api/api";
 
-const stores = [
+
+
+
+const StoreLocations = () => {
+  const [storeStatus, setStoreStatus] = useState<{
+    isOpen: boolean;
+    openingTime: string;
+    closingTime: string;
+    holidayMode: boolean;
+    message: string;
+    lastStatusChange: string;
+  } | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const res = await apiService.getStoreStatus();
+        if (res.success) {
+          setStoreStatus(res.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatus();
+  }, []);
+ const stores = [
   {
     name: "Chennai – Guindy",
     address: "Plot No. 1, Jawaharlal Nehru Salai, SIDCO Industrial Estate, Guindy, Chennai, Tamil Nadu 600032",
-    status: "open" as const,
+    status: storeStatus?.isOpen  ? "open" as const : "Closed",
     hours: "8:00 AM – 11:00 PM",
     flagship: true,
     mapUrl: "https://maps.app.goo.gl/kaWEJ625iSLgu4K59",
@@ -30,8 +63,10 @@ const stores = [
     mapUrl: "",
   },
 ];
+ 
 
-const StoreLocations = () => (
+  return (
+    
   <Layout>
     <AnimatedSection className="py-20 md:py-32 text-center">
       <div className="container mx-auto px-4">
@@ -79,13 +114,13 @@ const StoreLocations = () => (
             </div>
 
             <div className="flex items-center gap-2 mb-6">
-              <span className={`w-2 h-2 rounded-full ${store.status === "open" ? "bg-secondary animate-pulse" : "bg-muted-foreground"}`} />
+              <span className={`w-2 h-2 rounded-full ${store?.status == "open" ? "bg-secondary animate-pulse" : "bg-muted-foreground"}`} />
               <span className="text-sm font-medium">
-                {store.status === "open" ? "Open Now" : "Coming Soon"}
+                {store?.status == "open" ? "Open Now" : "Coming Soon"}
               </span>
             </div>
 
-            {store.status === "open" ? (
+            {store?.status == "open" ? (
               <div className="flex gap-2">
                 <a href={store.mapUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
                   <Button className="w-full gradient-hero text-primary-foreground rounded-full" size="sm">
@@ -107,7 +142,7 @@ const StoreLocations = () => (
         ))}
       </div>
     </section>
-  </Layout>
-);
+  </Layout>);
+};
 
 export default StoreLocations;
