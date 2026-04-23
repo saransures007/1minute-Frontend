@@ -65,7 +65,7 @@ const Profile = () => {
           <div className="space-y-3 text-sm mb-6">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Mobile</span>
-              <span className="font-medium">{user.mobile}</span>
+              <span className="font-medium">{user.phone}</span>
             </div>
 
             <div className="flex justify-between">
