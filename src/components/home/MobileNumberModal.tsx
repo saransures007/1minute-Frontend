@@ -5,10 +5,15 @@ import { apiService } from "@/lib/api/api";
 const MobileNumberModal = ({ open, tempUser, onClose, onSuccess }: any) => {
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(true);
+
+  const isValidIndianNumber = (num: string) => {
+    return /^[6-9]\d{9}$/.test(num);
+  };
 
   const handleSubmit = async () => {
-    if (!mobile || mobile.length < 10) {
-      alert("Enter valid mobile number");
+    if (!isValidIndianNumber(mobile)) {
+      alert("Enter valid WhatsApp number");
       return;
     }
 
@@ -17,7 +22,8 @@ const MobileNumberModal = ({ open, tempUser, onClose, onSuccess }: any) => {
     try {
       const res = await apiService.loginUser({
         ...tempUser,
-        mobile
+        mobile,
+        whatsappOptIn: consent // optional for backend
       });
 
       if (res.success && res.data) {
@@ -46,29 +52,57 @@ const MobileNumberModal = ({ open, tempUser, onClose, onSuccess }: any) => {
             exit={{ scale: 0.9, y: 40 }}
             className="bg-card rounded-2xl p-6 w-[90%] max-w-sm shadow-xl border"
           >
-            <h2 className="text-xl font-bold mb-2">
-              Complete your profile
+            {/* 🔥 HEADER */}
+            <h2 className="text-xl font-bold mb-1">
+              📱 WhatsApp Number
             </h2>
 
             <p className="text-sm text-muted-foreground mb-4">
-              We need your mobile number for billing & rewards
+              Get order updates, offers & new product alerts on WhatsApp
             </p>
 
-            <input
-              type="tel"
-              placeholder="Enter mobile number"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary mb-4"
-            />
+            {/* 🔥 INPUT */}
+            <div className="relative mb-3">
+              <span className="absolute left-3 top-2.5 text-muted-foreground text-sm">
+                +91
+              </span>
+              <input
+                type="tel"
+                placeholder="Enter WhatsApp number"
+                value={mobile}
+                onChange={(e) =>
+                  setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))
+                }
+                className="w-full pl-12 pr-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
 
+            {/* 🔥 CONSENT */}
+            <label className="flex items-start gap-2 text-xs text-muted-foreground mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={() => setConsent(!consent)}
+                className="mt-0.5"
+              />
+              <span>
+                I agree to receive updates on WhatsApp (no spam)
+              </span>
+            </label>
+
+            {/* 🔥 BUTTON */}
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-primary text-white py-2 rounded-lg font-medium"
+              className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:opacity-90 transition"
             >
               {loading ? "Saving..." : "Continue"}
             </button>
+
+            {/* 🔥 TRUST TEXT */}
+            <p className="text-[11px] text-center text-muted-foreground mt-3">
+              We respect your privacy. No spam.
+            </p>
           </motion.div>
         </motion.div>
       )}
