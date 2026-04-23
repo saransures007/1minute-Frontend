@@ -1,3 +1,6 @@
+import { LoginResponse } from "@/types/auth";
+import { getAuth } from "firebase/auth";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5050/api";
 
@@ -199,6 +202,38 @@ async chat(message: string) {
 async searchRequestedProducts(q: string) {
   return this.request(`/product-request/trending/search?q=${q}`);
 }
+
+// 🔥 AUTH LOGIN
+async loginUser(data: any) {
+  return this.request<LoginResponse>("/auth/users-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 }
+
+
+async getMyProfile() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) throw new Error("Not logged in");
+
+  const token = await user.getIdToken(); // 🔥 IMPORTANT
+
+  console.log("Fetching profile with token:", token); // 🔥 DEBUG
+  return this.request<any>("/customers/me", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // 🔥 send token
+    },
+  });
+}
+
+}
+
+
 
 export const apiService = new ApiService(API_BASE_URL);

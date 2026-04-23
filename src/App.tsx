@@ -14,6 +14,7 @@ import ProductRequest from "./pages/ProductRequest";
 import CreateCombo from "./pages/CreateCombo";
 import NotFound from "./pages/NotFound";
 import GenieAi from "./pages/GenieAi"
+import Profile from "./pages/Profile"
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/stores" element={<StoreLocations />} />
           <Route path="/franchise" element={<FranchiseEnquiry />} />
           <Route path="/request-product" element={<ProductRequest />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/genieai" element={<GenieAi />} />
           {/* <Route path="/create-combo" element={<CreateCombo />} /> */}
           {/* <Route path="/admin/login" element={<AdminLogin />} />

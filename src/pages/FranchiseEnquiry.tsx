@@ -25,7 +25,7 @@ const FranchiseEnquiry = () => {
     phone: "",
     email: "",
     city: "",
-    investment: "₹10L – ₹25L",
+    investment: "₹20L – ₹30L",
     description: "",
   });
 
@@ -174,8 +174,8 @@ const FranchiseEnquiry = () => {
                       onChange={handleChange}
                       className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
                     >
-                      <option>₹10L – ₹25L</option>
-                      <option>₹25L – ₹50L</option>
+                      <option>₹20L – ₹30L</option>
+                      <option>₹30L – ₹50L</option>
                       <option>₹50L – ₹1Cr</option>
                       <option>₹1Cr+</option>
                     </select>

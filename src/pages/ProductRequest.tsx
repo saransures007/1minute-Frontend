@@ -254,7 +254,7 @@ export default function ProductRequest() {
 
                     <div className="flex items-center gap-2">
                       <span className="text-xs">
-                        {item.voteCount}
+                        {/* {item.voteCount} */}
                       </span>
 
                       <VoteButton
