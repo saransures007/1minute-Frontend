@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
 const UserAvatar = ({ user }: any) => {
-  if (user?.photoURL) {
+  if (user?.image) {
     return (
       <img
-        src={user.photoURL}
+        src={user.image}
         className="w-9 h-9 rounded-full object-cover border"
       />
     );

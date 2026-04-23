@@ -47,12 +47,13 @@ const Header = () => {
 const [tempUser, setTempUser] = useState<any>(null);
 
   const location = useLocation();
-  const { user } = useAuth();
+  const  [user, setUser]  = useState<any>(null);
 
   // 🔥 FETCH STORE STATUS
   useEffect(() => {
     fetchStoreStatus();
-      const user = localStorage.getItem("app_user");
+    const storedUser = localStorage.getItem("app_user");
+    setUser(storedUser ? JSON.parse(storedUser) : null);
 
   if (user) {
     fetchProfile(); // 🔥 refresh profile every load

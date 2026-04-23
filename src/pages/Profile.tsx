@@ -8,28 +8,28 @@ import Layout from "@/components/Layout";
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
     const navigate = useNavigate();
-  useEffect(() => {
-    const stored = localStorage.getItem("app_user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
-  }, []);
+    useEffect(() => {
+        const stored = localStorage.getItem("app_user");
+        if (stored) {
+        setUser(JSON.parse(stored));
+        }
+    }, []);
 
-  if (!user) {
-    return (
-      <div className="h-[70vh] flex items-center justify-center text-muted-foreground">
-        Please login to view profile
-      </div>
-    );
-  }
+        if (!user) {
+            return (
+            <div className="h-[70vh] flex items-center justify-center text-muted-foreground">
+                Please login to view profile
+            </div>
+            );
+        }
 
-        const handleLogout = async () => {
+    const handleLogout = async () => {
         await logout();
         localStorage.removeItem("app_user");
 
         // ✅ Navigate to home without reload
         navigate("/");
-        };
+    };
 
   return (
     <Layout>
