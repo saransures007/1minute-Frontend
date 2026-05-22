@@ -7,7 +7,7 @@ import { apiService } from "@/lib/api/api";
 import { logout } from "@/lib/auth";
 import { formatMoney, getActiveTier, TIERS } from "@/lib/loyalty";
 import { useNavigate } from "react-router-dom";
-import { Award, LogOut, ScanQrCode, Sparkles, TrendingUp, Trophy } from "lucide-react";
+import { LogOut, ScanQrCode, Sparkles, TrendingUp, Trophy } from "lucide-react";
 
 import Layout from "@/components/Layout";
 
@@ -27,6 +27,19 @@ type ProfileUser = {
   payable?: number;
   preferredPaymentMethod?: string;
   mostlyBoughtItems?: string[];
+  loyaltyTransactions?: {
+    id?: number | string;
+    invoiceDate?: string;
+    invoiceNo?: string;
+    openingPoints?: number;
+    earnedPoints?: number;
+    redeemedPoints?: number;
+    expiredPoints?: number;
+    pointsBalance?: number;
+    expiryDate?: string;
+    transactionType?: "earned" | "redeemed" | "expired" | string;
+    notes?: string | null;
+  }[];
   analytics?: {
     totalSales?: number;
     totalOrders?: number;
@@ -46,6 +59,19 @@ const getStoredProfile = () => {
   } catch {
     return null;
   }
+};
+
+const formatTransactionDate = (value?: string) => {
+  if (!value) return "—";
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "—";
+
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 };
 
 const getCardTextClass = () => "text-white";
@@ -144,24 +170,12 @@ const Profile = () => {
   const loyaltyPoints = user?.loyaltyPoints || 0;
   const walletValue = loyaltyPoints * 0.5;
   const favoriteItems = analytics?.mostlyBoughtItems || user?.mostlyBoughtItems || [];
+  const transactions = user?.loyaltyTransactions || [];
 
   const qrValue = useMemo(() => {
     if (!user) return "";
     return user.phone || user.partyCode || user.email || user.name || "";
   }, [user]);
-
-  const initials = useMemo(() => {
-    const name = user?.name?.trim();
-    if (!name) return "U";
-
-    return name
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase();
-  }, [user?.name]);
 
   const handleLogout = async () => {
     await logout();
@@ -414,59 +428,111 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className="rounded-[28px] border border-border bg-background p-5 shadow-[0_14px_30px_rgba(15,23,42,0.06)]">
-                  <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
-                    <Trophy className="h-4 w-4 text-amber-600" />
-                    Account summary
+                <div className="space-y-6">
+                  <div className="rounded-[28px] border border-border bg-background p-5 shadow-[0_14px_30px_rgba(15,23,42,0.06)]">
+                    <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+                      <Trophy className="h-4 w-4 text-amber-600" />
+                      Account summary
+                    </div>
+
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <span className="text-muted-foreground">Currency</span>
+                        <span className="font-semibold text-foreground">
+                          {user.currency || "INR"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <span className="text-muted-foreground">WhatsApp</span>
+                        <span className="font-semibold text-foreground">
+                          {user.whatsappOptIn ? "Opted in" : "Off"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <span className="text-muted-foreground">Receivable</span>
+                        <span className="font-semibold text-foreground">
+                          {formatMoney(user.receivable)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <span className="text-muted-foreground">Payable</span>
+                        <span className="font-semibold text-foreground">
+                          {formatMoney(user.payable)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <span className="text-muted-foreground">Purchase frequency</span>
+                        <span className="font-semibold text-foreground">
+                          {analytics?.purchaseFrequency || "—"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {favoriteItems.length ? (
+                      <div className="mt-5 rounded-2xl border border-border bg-white p-4 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                        <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
+                          Favorite items
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {favoriteItems.slice(0, 5).map((item) => (
+                            <span
+                              key={item}
+                              className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
 
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <span className="text-muted-foreground">Currency</span>
-                      <span className="font-semibold text-foreground">
-                        {user.currency || "INR"}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <span className="text-muted-foreground">WhatsApp</span>
-                      <span className="font-semibold text-foreground">
-                        {user.whatsappOptIn ? "Opted in" : "Off"}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <span className="text-muted-foreground">Receivable</span>
-                      <span className="font-semibold text-foreground">
-                        {formatMoney(user.receivable)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <span className="text-muted-foreground">Payable</span>
-                      <span className="font-semibold text-foreground">
-                        {formatMoney(user.payable)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <span className="text-muted-foreground">Purchase frequency</span>
-                      <span className="font-semibold text-foreground">
-                        {analytics?.purchaseFrequency || "—"}
-                      </span>
-                    </div>
-                  </div>
+                  {transactions.length ? (
+                    <div className="rounded-[28px] border border-border bg-white p-5 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
+                      <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Trophy className="h-4 w-4 text-amber-600" />
+                        Bill rewards
+                      </div>
 
-                  {favoriteItems.length ? (
-                    <div className="mt-5 rounded-2xl border border-border bg-white p-4 shadow-[0_12px_24px_rgba(15,23,42,0.04)]">
-                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                        Favorite items
-                      </p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {favoriteItems.slice(0, 5).map((item) => (
-                          <span
-                            key={item}
-                            className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground"
-                          >
-                            {item}
-                          </span>
-                        ))}
+                      <div className="max-h-[380px] space-y-3 overflow-y-auto pr-1">
+                        {transactions.map((transaction) => {
+                          const earned = transaction.earnedPoints || 0;
+                          return (
+                            <div
+                              key={
+                                transaction.id ||
+                                transaction.invoiceNo ||
+                                transaction.invoiceDate ||
+                                `${earned}-${transaction.pointsBalance || 0}`
+                              }
+                              className="flex flex-col gap-2 rounded-2xl border border-border bg-background px-4 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.04)] sm:flex-row sm:items-center sm:justify-between"
+                            >
+                              <div>
+                                <p className="font-semibold text-foreground">
+                                  {transaction.invoiceNo || "Invoice"}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {formatTransactionDate(
+                                    transaction.invoiceDate || transaction.expiryDate,
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="text-sm sm:text-right">
+                                <p className="font-semibold text-emerald-600">
+                                  +{earned.toLocaleString("en-IN")} pts earned
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  Balance{" "}
+                                  {Math.max(transaction.pointsBalance || loyaltyPoints, 0).toLocaleString(
+                                    "en-IN",
+                                  )}{" "}
+                                  pts
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ) : null}
