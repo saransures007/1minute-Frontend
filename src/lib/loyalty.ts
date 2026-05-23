@@ -32,7 +32,7 @@ export const TIERS: TierInfo[] = [
     id: "silver",
     name: "Silver",
     emoji: "🥈",
-    threshold: 5000,
+    threshold: 10000,
     benefits: ["Free package cover", "Loyalty redeem enabled"],
     accent: "from-[#4b5563] via-[#2f3742] to-[#161b22]",
     badgeClass:
@@ -46,7 +46,7 @@ export const TIERS: TierInfo[] = [
     id: "gold",
     name: "Gold",
     emoji: "🥇",
-    threshold: 20000,
+    threshold: 50000,
     benefits: ["Free package cover", "1 free fruit bowl / month"],
     accent: "from-[#8a5a00] via-[#d4a017] to-[#3b2400]",
     badgeClass:
@@ -60,7 +60,7 @@ export const TIERS: TierInfo[] = [
     id: "elite",
     name: "Elite",
     emoji: "👑",
-    threshold: 50000,
+    threshold: 100000,
     benefits: ["Free package cover", "1 free drink / month", "1 free fruit bowl / month"],
     accent: "from-[#063b2e] via-[#03110d] to-[#010706]",
     badgeClass:
@@ -74,7 +74,7 @@ export const TIERS: TierInfo[] = [
     id: "platinum",
     name: "Platinum",
     emoji: "💎",
-    threshold: 100000,
+    threshold: 500000,
     benefits: [
       "Free package cover",
       "1 free drink / month",

@@ -10,7 +10,7 @@ import EnergyZone from "@/components/home/EnergyZone";
 const Index = () => (
   <Layout>
     <HeroSection />
-    <PlansSection />
+    {/* <PlansSection /> */}
     <CategoriesSection />
     <FeaturedProducts />
     <DealsSection />

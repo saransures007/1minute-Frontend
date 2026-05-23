@@ -93,16 +93,92 @@ const getCardAccentClass = (tierId: string) => {
   }
 };
 
+const getCardBackgroundClass = (tierId: string) => {
+  switch (tierId) {
+    case "bronze":
+      return `
+        border-[#c08a5b]/50
+        bg-gradient-to-br
+        from-[#6b4423]
+        via-[#4a2e1a]
+        to-[#24150d]
+        text-[#fff1df]
+        shadow-[0_18px_36px_rgba(0,0,0,0.22)]
+      `;
+
+    case "silver":
+      return `
+        border-[#cbd5e1]/45
+        bg-gradient-to-br
+        from-[#4b5563]
+        via-[#2f3742]
+        to-[#161b22]
+        text-[#f8fafc]
+        shadow-[0_20px_40px_rgba(0,0,0,0.30)]
+      `;
+
+    case "gold":
+      return `
+        border-[#fbbf24]/60
+        bg-gradient-to-br
+        from-[#8a5a00]
+        via-[#d4a017]
+        to-[#3b2400]
+        text-[#fff8dc]
+        shadow-[0_22px_55px_rgba(0,0,0,0.40)]
+      `;
+
+    case "elite":
+      return `
+        border-[#10b981]/55
+        bg-gradient-to-br
+        from-[#063b2e]
+        via-[#03110d]
+        to-[#010706]
+        text-[#ecfdf5]
+        shadow-[0_22px_55px_rgba(0,0,0,0.44)]
+      `;
+
+    case "platinum":
+      return `
+        border-white/20
+        bg-gradient-to-br
+        from-black
+        via-[#050816]
+        to-[#020617]
+        text-white
+        shadow-[0_24px_70px_rgba(0,0,0,0.60)]
+      `;
+
+    default:
+      return `
+        border-slate-700/70
+        bg-gradient-to-br
+        from-slate-950
+        via-slate-900
+        to-slate-800
+        text-white
+      `;
+  }
+};
+
 const getCardGlowClass = (tierId: string) => {
   switch (tierId) {
+    case "bronze":
+      return "bg-[#c08a5b]/20";
+
     case "silver":
-      return "bg-slate-300/20";
+      return "bg-[#d1d5db]/20";
+
     case "gold":
-      return "bg-amber-300/20";
+      return "bg-[#ffd166]/20";
+
     case "elite":
-      return "bg-violet-300/20";
+      return "bg-[#34d399]/20";
+
     case "platinum":
-      return "bg-slate-200/20";
+      return "bg-white/10";
+
     default:
       return "bg-orange-300/20";
   }
@@ -216,6 +292,7 @@ const Profile = () => {
   const cardMutedClass = getCardMutedClass();
   const cardAccentClass = getCardAccentClass(currentTier.id);
   const cardGlowClass = getCardGlowClass(currentTier.id);
+  const getBackgroundClass = getCardBackgroundClass(currentTier.id);
 
   return (
     <Layout>
@@ -227,7 +304,7 @@ const Profile = () => {
             transition={{ duration: 0.35, ease: "easeOut" }}
           >
             <div
-              className={`relative overflow-hidden rounded-[36px] border border-slate-700/70 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-5 shadow-[0_28px_80px_rgba(15,23,42,0.42)] sm:p-6 ${cardAccentClass}`}
+              className={`relative overflow-hidden rounded-[36px] border p-5 sm:p-6 ${getBackgroundClass}`}
             >
               <div className="absolute inset-0 opacity-30 [background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12)_0,rgba(255,255,255,0.12)_1px,transparent_1px,transparent_14px)]" />
               <div className={`absolute -right-10 top-2 h-40 w-40 rounded-full blur-3xl ${cardGlowClass}`} />

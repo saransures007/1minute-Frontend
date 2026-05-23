@@ -223,7 +223,7 @@ async getMyProfile() {
 
   const token = await user.getIdToken(); // 🔥 IMPORTANT
 
-  console.log("Fetching profile with token:", token); // 🔥 DEBUG
+  // console.log("Fetching profile with token:", token); // 🔥 DEBUG
   return this.request<any>("/customers/me", {
     method: "GET",
     headers: {
